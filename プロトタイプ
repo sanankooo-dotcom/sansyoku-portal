@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ゲーム攻略・データツールポータル</title>
+  <!-- Tailwind CSS (デザインライブラリ) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome (アイコン) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <!-- ヘッダー -->
+  <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <div class="bg-indigo-600 text-white p-2 rounded-lg text-xl shadow-lg shadow-indigo-500/30">
+          <i class="fa-solid font-bold fa-gamepad"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold tracking-wide">GAME TOOLS HUB</h1>
+          <p class="text-xs text-slate-400">有志制作ツール・データ収集ポータル</p>
+        </div>
+      </div>
+      <span class="text-xs bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 px-3 py-1 rounded-full">
+        v1.0.0
+      </span>
+    </div>
+  </header>
+
+  <!-- メインコンテンツ -->
+  <main class="flex-grow max-w-6xl mx-auto px-4 py-8 w-full">
+
+    <!-- ヒーローセクション / 案内 -->
+    <div class="bg-gradient-to-r from-indigo-900/40 to-slate-800/40 border border-indigo-500/20 rounded-2xl p-6 mb-8 text-center sm:text-left sm:flex sm:justify-between sm:items-center">
+      <div>
+        <h2 class="text-2xl font-bold mb-2 text-white">ゲームデータ収集・分析ツール集</h2>
+        <p class="text-slate-300 text-sm">検証データ収集や計算ツールをまとめたポータルサイトです。</p>
+      </div>
+      <div class="mt-4 sm:mt-0">
+        <span class="inline-flex items-center text-xs text-slate-400 bg-slate-800 px-3 py-2 rounded-lg border border-slate-700">
+          <i class="fa-solid fa-circle text-emerald-400 text-[10px] mr-2"></i>全ツール正常稼働中
+        </span>
+      </div>
+    </div>
+
+    <!-- 検索 & フィルターバー -->
+    <div class="flex flex-col sm:flex-row gap-4 mb-8">
+      <div class="relative flex-grow">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+        <input type="text" placeholder="ツール名やキーワードで検索..." 
+               class="w-full bg-slate-800 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-colors">
+      </div>
+      <div class="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
+        <button class="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap shadow-md shadow-indigo-600/20">すべて</button>
+        <button class="bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap border border-slate-700 transition-colors">データ収集</button>
+        <button class="bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap border border-slate-700 transition-colors">ダメージ計算</button>
+        <button class="bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap border border-slate-700 transition-colors">データベース</button>
+      </div>
+    </div>
+
+    <!-- ツール一覧カードグリッド -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- カード 1 -->
+      <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5 hover:border-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 flex flex-col justify-between group">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <span class="text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">データ収集</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-100 group-hover:text-indigo-400 transition-colors mb-1">ドロップ率検証フォーム</h3>
+          <p class="text-slate-400 text-xs leading-relaxed mb-4">周回時のドロップデータをみんなで送信・集計してリアルタイム確率を試算するツールです。</p>
+        </div>
+        <div class="pt-4 border-t border-slate-700/50 flex justify-between items-center text-xs">
+          <span class="text-slate-500">制作者: Aさん</span>
+          <a href="#" target="_blank" class="inline-flex items-center text-indigo-400 hover:text-indigo-300 font-semibold gap-1">
+            ツールを開く <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- カード 2 -->
+      <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5 hover:border-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 flex flex-col justify-between group">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-calculator"></i>
+            </div>
+            <span class="text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2.5 py-0.5 rounded-full">ダメージ計算</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-100 group-hover:text-amber-400 transition-colors mb-1">ステータス最適化シミュレーター</h3>
+          <p class="text-slate-400 text-xs leading-relaxed mb-4">装備とステータスを入力すると、最も火力がでる割り振りを自動計算します。</p>
+        </div>
+        <div class="pt-4 border-t border-slate-700/50 flex justify-between items-center text-xs">
+          <span class="text-slate-500">制作者: Bさん</span>
+          <a href="#" target="_blank" class="inline-flex items-center text-amber-400 hover:text-amber-300 font-semibold gap-1">
+            ツールを開く <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- カード 3 -->
+      <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5 hover:border-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 flex flex-col justify-between group">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-database"></i>
+            </div>
+            <span class="text-[11px] font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-2.5 py-0.5 rounded-full">データベース</span>
+          </div>
+          <h3 class="font-bold text-lg text-slate-100 group-hover:text-cyan-400 transition-colors mb-1">素材・レシピ検索図鑑</h3>
+          <p class="text-slate-400 text-xs leading-relaxed mb-4">スプレッドシート内の素材データを爆速でインクリメンタル検索できるWebツール。</p>
+        </div>
+        <div class="pt-4 border-t border-slate-700/50 flex justify-between items-center text-xs">
+          <span class="text-slate-500">制作者: Cさん</span>
+          <a href="#" target="_blank" class="inline-flex items-center text-cyan-400 hover:text-cyan-300 font-semibold gap-1">
+            ツールを開く <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- フッター -->
+  <footer class="border-t border-slate-800 mt-12 py-6 text-center text-xs text-slate-500">
+    <p>© 2026 Game Tools Community. Created with GAS & Tailwind CSS</p>
+  </footer>
+
+</body>
+</html>
