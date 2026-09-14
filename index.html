@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>三色同刻ポータルサイト</title>
+
+    <!-- favicon: tab にロゴを表示するためのタグ -->
+    <link rel="icon" href="favicon.png" />
+    <link rel="apple-touch-icon" href="favicon.png" />
+    <link rel="mask-icon" href="favicon.svg" color="#d4af37" />
+    <meta name="theme-color" content="#182030">
+
     <style>
         /* --------------------------------------------------
          * 基本スタイル & カラー定義 (ロゴのテーマカラーに基づく)
@@ -64,69 +71,84 @@
         .header-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0.8rem 1.5rem;
+            padding: 0.6rem 1rem;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo-area {
-            display: flex;
             align-items: center;
             gap: 1rem;
         }
 
+        .logo-area {
+           display: flex;
+           align-items: center;
+           gap: 0.8rem;
+        }
+
+        /* header のロゴ画像は HTML 側で class="logo-img" を付与してください（下で付けています） */
         .logo-img {
-            height:auto;
-            width:77px;
-            border-radius: 8px;
-            border: 1px solid var(--accent-gold);
-            object-fit: contain;
+           height: 48px;
+           width: 48px;
+           border-radius: 50%;
+           border: 2px solid var(--accent-gold);
+           object-fit: cover;
+           display: block;
         }
 
         .site-title {
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             font-weight: 700;
             background: linear-gradient(45deg, #ffffff, var(--accent-gold-bright));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.03em;
+            display: inline-block;
+        }
+
+        nav {
+            /* ensure nav doesn't overflow on small screens */
         }
 
         nav ul {
             display: flex;
             list-style: none;
-            gap: 1.5rem;
+            gap: 1.2rem;
+            align-items: center;
         }
 
         nav a {
             font-weight: 600;
             font-size: 0.95rem;
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem;
             border-radius: 6px;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             position: relative;
+            color: inherit;
         }
 
         nav a::after {
             content: '';
             position: absolute;
-            bottom: 0;
+            bottom: 6px;
             left: 50%;
             width: 0;
             height: 2px;
             background-color: var(--accent-gold);
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             transform: translateX(-50%);
         }
 
         nav a:hover::after {
-            width: 80%;
+            width: 70%;
         }
 
         nav a:hover {
             color: var(--accent-gold-bright);
-            background-color: rgba(212, 175, 55, 0.1);
+            background-color: rgba(212, 175, 55, 0.08);
+        }
+
+        nav a:focus {
+            outline: 2px dashed rgba(212,175,55,0.25);
+            outline-offset: 2px;
         }
 
         /* --------------------------------------------------
@@ -150,14 +172,14 @@
         }
 
         .hero h1 {
-            font-size: 2.5rem;
+            font-size: 2.1rem;
             margin-bottom: 0.5rem;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.06em;
         }
 
         .hero p {
             color: var(--text-sub);
-            font-size: 1.1rem;
+            font-size: 1.05rem;
         }
 
         /* --------------------------------------------------
@@ -166,21 +188,21 @@
         main {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 3rem 1.5rem;
+            padding: 2.5rem 1rem;
             flex: 1;
             width: 100%;
         }
 
         section {
-            margin-bottom: 4rem;
+            margin-bottom: 3rem;
             scroll-margin-top: 100px;
         }
 
         .section-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             color: var(--accent-gold-bright);
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.4rem;
             border-bottom: 2px solid var(--accent-gold);
             display: flex;
             align-items: center;
@@ -191,7 +213,7 @@
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 2rem;
+            padding: 1.5rem;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease, border-color 0.3s ease;
         }
@@ -200,18 +222,16 @@
             border-color: var(--accent-gold);
         }
 
-        /* 総合案内（三色同刻のモチーフ） */
         .badge-container {
             display: flex;
             gap: 1rem;
-            margin-top: 1.5rem;
+            margin-top: 1rem;
             flex-wrap: wrap;
         }
 
         .badge {
-            flex: 1;
-            min-width: 200px;
-            padding: 1rem;
+            flex: 1 1 200px;
+            padding: 0.9rem;
             border-radius: 8px;
             background: rgba(0, 0, 0, 0.3);
             border-left: 4px solid;
@@ -222,7 +242,7 @@
         .badge.green { border-color: var(--accent-green); }
 
         .badge h4 {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             margin-bottom: 0.3rem;
         }
 
@@ -230,14 +250,14 @@
         .badge.blue h4 { color: var(--accent-blue); }
         .badge.green h4 { color: var(--accent-green); }
 
-        /* ツール紹介リンクカード */
         .external-tool-card {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card-hover) 100%);
             border: 1px solid var(--accent-gold);
-            gap: 1.5rem;
+            gap: 1rem;
+            padding: 1rem;
         }
 
         .btn-link {
@@ -247,7 +267,7 @@
             background: linear-gradient(135deg, var(--accent-gold) 0%, #b8860b 100%);
             color: #000;
             font-weight: 700;
-            padding: 0.8rem 1.8rem;
+            padding: 0.6rem 1.2rem;
             border-radius: 8px;
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
@@ -260,25 +280,20 @@
             box-shadow: 0 6px 18px rgba(255, 215, 0, 0.4);
         }
 
-        /* リリース情報タイムライン */
-        .release-list {
-            list-style: none;
-        }
+        .release-list { list-style: none; }
 
         .release-item {
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
             align-items: flex-start;
         }
 
-        .release-item:last-child {
-            border-bottom: none;
-        }
+        .release-item:last-child { border-bottom: none; }
 
         .release-date {
-            background-color: rgba(212, 175, 55, 0.15);
+            background-color: rgba(212, 175, 55, 0.12);
             color: var(--accent-gold-bright);
             padding: 0.2rem 0.6rem;
             border-radius: 4px;
@@ -287,24 +302,15 @@
             white-space: nowrap;
         }
 
-        .release-content h4 {
-            font-size: 1.05rem;
-            margin-bottom: 0.2rem;
-        }
+        .release-content h4 { font-size: 1.05rem; margin-bottom: 0.2rem; }
 
-        .release-content p {
-            color: var(--text-sub);
-            font-size: 0.9rem;
-        }
+        .release-content p { color: var(--text-sub); font-size: 0.9rem; }
 
-        /* --------------------------------------------------
-         * フッター
-         * -------------------------------------------------- */
         footer {
             background-color: #080b10;
             border-top: 1px solid var(--border-color);
             text-align: center;
-            padding: 2rem 1.5rem;
+            padding: 1.5rem 1rem;
             color: var(--text-sub);
             font-size: 0.9rem;
         }
@@ -313,11 +319,12 @@
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 0.6rem;
+                align-items: stretch;
             }
 
             nav ul {
-                gap: 0.8rem;
+                gap: 0.6rem;
                 flex-wrap: wrap;
                 justify-content: center;
             }
@@ -340,7 +347,8 @@
     <header>
         <div class="header-container">
             <div class="logo-area">
-                <img src="logo.jpg" alt="三色同刻 ロゴ">
+                <!-- ここで class="logo-img" を付与済み -->
+                <img class="logo-img" src="logo.jpg" alt="三色同刻 ロゴ">
                 <span class="site-title">三色同刻ポータル</span>
             </div>
             <nav>
@@ -370,7 +378,7 @@
             </h2>
             <div class="card">
                 <h3>「三色同刻」についての概要</h3>
-                <p style="margin-top: 0.8rem; color: var(--text-sub);">
+                <p style="margin-top: 0.6rem; color: var(--text-sub);">
                     当ポータルサイトへようこそ。「三色同刻」は、赤・青・緑の3つの属性とツール（ツルハシ、釣り竿、斧）をシンボルに掲げ、多様なプロジェクトや連携ツールを集約・提供するポータルプラットフォームです。
                 </p>
 
@@ -396,6 +404,7 @@
             <h2 class="section-title">
                 <span>◆</span> 会社経営オンライン報告ツール
             </h2>
+
             <div class="card external-tool-card">
                 <div>
                     <h3>納品状況を報告</h3>
@@ -419,7 +428,7 @@
     <div class="card">
         <p>最新のリリース情報は専用ページで管理しています。</p>
 
-        <div style="margin-top:1.5rem;">
+        <div style="margin-top:1rem;">
             <a href="https://script.google.com/macros/s/AKfycbx3LrFnfuEAENr9U6T7bkIJ1QIq6Ks5ebZIZu1x4BqpybWcQ9Xi2HKvMRimMITwHF7I/exec" target="_top" class="btn-link">
                 リリース一覧を見る ➔
             </a>
