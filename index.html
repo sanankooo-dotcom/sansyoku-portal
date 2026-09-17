@@ -216,6 +216,21 @@
     .activity-icon{width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.04)}
     .activity-title{font-weight:700;color:var(--accent-gold-bright);margin-bottom:6px}
     .activity-desc{color:var(--muted);font-size:0.95rem}
+/* 活動内容アイコンのスマホ表示最適化 */
+.activity-icon {
+  flex-shrink: 0; /* スマホ画面でアイコン枠が潰れるのを防ぐ */
+}
+
+.activity-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: var(--accent-gold-bright);
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  display: block;
+}
 
     .cta-area{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
     .btn-primary{background:linear-gradient(135deg,var(--accent-gold-bright),var(--accent-gold));color:#000;padding:10px 14px;border-radius:10px;font-weight:700;border:none;cursor:pointer}
@@ -264,18 +279,112 @@
       font-weight: bold;
     }
 
-    /* bottom nav */
-    .bottom-nav{
-      position:fixed;left:0;right:0;bottom:0;
-      display:flex;justify-content:space-around;align-items:center;
-      padding:8px calc(env(safe-area-inset-left) + 10px) calc(env(safe-area-inset-bottom) + 8px);
-      gap:6px;background:linear-gradient(180deg,#0b0e14,#090a0f);
-      border-top:1px solid rgba(255,255,255,0.04); z-index:130;
-      box-shadow:0 -6px 18px rgba(0,0,0,0.5);
+    /* bottom nav (おしゃれなガラスモーフィズム & 発光アニメーション) */
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 6px calc(env(safe-area-inset-left) + 12px) calc(env(safe-area-inset-bottom) + 6px);
+      gap: 6px;
+      background: rgba(11, 14, 20, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 130;
+      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.6);
     }
-    .tab{flex:1 1 0;max-width:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:6px 4px;background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer}
-    .tab svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5}
-    .tab.active{color:var(--accent-gold-bright)}
+
+    .tab {
+      flex: 1 1 0;
+      max-width: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 4px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      position: relative;
+      transition: color 0.3s ease;
+      border-radius: 12px;
+    }
+
+    /* アイコン背後の光るカプセル背景 */
+    .tab-icon-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 28px;
+      border-radius: 14px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .tab svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.3s ease, filter 0.3s ease, stroke 0.3s ease;
+    }
+
+    .tab-label {
+      font-size: 10px;
+      font-weight: 500;
+      margin-top: 3px;
+      letter-spacing: 0.02em;
+      transition: color 0.3s ease, font-weight 0.3s ease;
+    }
+
+    /* ホバー・アクティブ時の状態 */
+    .tab:hover {
+      color: #fff;
+    }
+
+    .tab.active {
+      color: var(--accent-gold-bright);
+    }
+
+    .tab.active .tab-icon-wrapper {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .tab.active svg {
+      transform: translateY(-2px) scale(1.08);
+      filter: drop-shadow(0 0 8px var(--accent-gold-bright));
+    }
+
+    .tab.active .tab-label {
+      font-weight: 700;
+      color: var(--accent-gold-bright);
+    }
+
+    /* タブ上部のアクティブバー */
+    .tab::after {
+      content: '';
+      position: absolute;
+      top: -6px;
+      width: 0;
+      height: 3px;
+      background: var(--accent-gold-bright);
+      border-radius: 3px;
+      transition: width 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .tab.active::after {
+      width: 18px;
+      box-shadow: 0 0 10px var(--accent-gold-bright);
+    }
     
     footer{
       background:#080b10;
@@ -357,47 +466,62 @@
         <div class="card">
           <div class="purpose-title">活動内容</div>
           <div class="activities" aria-hidden="false">
-            <div class="activity-item">
-              <div class="activity-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M2 20l7-7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path><path d="M9 13l5-5 3 3-5 5z" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-              </div>
-              <div>
-                <div class="activity-title">アイテムの採集</div>
-                <div class="activity-desc">ゲーム内で必要となる様々なアイテムを採集します。</div>
-              </div>
-            </div>
+  <!-- アイテムの採集 -->
+  <div class="activity-item">
+    <div class="activity-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+      </svg>
+    </div>
+    <div>
+      <div class="activity-title">アイテムの採集</div>
+      <div class="activity-desc">ゲーム内で必要となる様々なアイテムを採集します。</div>
+    </div>
+  </div>
 
-            <div class="activity-item">
-              <div class="activity-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M2 20l6-6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path><rect x="9" y="4" width="10" height="6" rx="1.2"></rect></svg>
-              </div>
-              <div>
-                <div class="activity-title">アイテムの加工</div>
-                <div class="activity-desc">採集した素材などを加工し、より価値のあるアイテムを作ります。</div>
-              </div>
-            </div>
+  <!-- アイテムの加工 -->
+  <div class="activity-item">
+    <div class="activity-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+      </svg>
+    </div>
+    <div>
+      <div class="activity-title">アイテムの加工</div>
+      <div class="activity-desc">採集した素材などを加工し、より価値のあるアイテムを作ります。</div>
+    </div>
+  </div>
 
-            <div class="activity-item">
-              <div class="activity-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M3 12h6l3-3 6 6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-              </div>
-              <div>
-                <div class="activity-title">アイテムの売買</div>
-                <div class="activity-desc">アイテムの売買・取引を行い、会社の利益につなげます。</div>
-              </div>
-            </div>
+  <!-- アイテムの売買 -->
+  <div class="activity-item">
+    <div class="activity-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <line x1="12" y1="1" x2="12" y2="23"></line>
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+      </svg>
+    </div>
+    <div>
+      <div class="activity-title">アイテムの売買</div>
+      <div class="activity-desc">アイテムの売買・取引を行い、会社の利益につなげます。</div>
+    </div>
+  </div>
 
-            <div class="activity-item">
-              <div class="activity-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M4 7h16M4 11h16M4 15h10" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-              </div>
-              <div>
-                <div class="activity-title">社内イベント</div>
-                <div class="activity-desc">社員同士で楽しめるイベントを企画・開催します。社員それぞれが自由に参加し、交流できる場を作ります。</div>
-              </div>
-            </div>
-          </div>
-        </div>
+  <!-- 社内イベント -->
+  <div class="activity-item">
+    <div class="activity-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+    </div>
+    <div>
+      <div class="activity-title">社内イベント</div>
+      <div class="activity-desc">社員同士で楽しめるイベントを企画・開催します。社員それぞれが自由に参加し、交流できる場を作ります。</div>
+    </div>
+  </div>
+</div>
       </section>
 
       <section class="section" aria-labelledby="contact-heading">
@@ -467,20 +591,42 @@
   <!-- bottom navigation -->
   <nav class="bottom-nav" role="navigation" aria-label="メインナビ">
     <button class="tab active" data-target="home" aria-label="ホーム">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 11.5L12 4l9 7.5"></path><path d="M5 11.5V19a1 1 0 0 0 1 1h3v-5h6v5h3a1 1 0 0 0 1-1v-7.5"></path></svg>
-      <div style="font-size:11px;margin-top:4px">ホーム</div>
+      <div class="tab-icon-wrapper">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+      </div>
+      <span class="tab-label">ホーム</span>
     </button>
+
     <button class="tab" data-target="tool" aria-label="ツール">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="8" y="3" width="8" height="4" rx="1"></rect><path d="M5 7h14a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a1 1 0 0 1 1-1z"></path></svg>
-      <div style="font-size:11px;margin-top:4px">ツール</div>
+      <div class="tab-icon-wrapper">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+        </svg>
+      </div>
+      <span class="tab-label">ツール</span>
     </button>
+
     <button class="tab" data-target="release" aria-label="リリース">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 11v2a1 1 0 0 0 1 1h3l7 4V7L7 11H4a1 1 0 0 1-1 1z"></path><path d="M16 8a4 4 0 0 1 0 8"></path></svg>
-      <div style="font-size:11px;margin-top:4px">リリース</div>
+      <div class="tab-icon-wrapper">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+      </div>
+      <span class="tab-label">リリース</span>
     </button>
+
     <button class="tab" data-target="settings" aria-label="設定">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z"></path><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06A2 2 0 0 1 2.3 16.88l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82L4.21 4.7a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H12a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09c0 .58.39 1.08 1 1.51.56.4 1.61.21 1.82-.33l.06-.06A2 2 0 0 1 21.7 7.12l-.06.06a1.65 1.65 0 0 0-.33 1.82c.21.54.21 1.19 0 1.73z"></path></svg>
-      <div style="font-size:11px;margin-top:4px">設定</div>
+      <div class="tab-icon-wrapper">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06A2 2 0 0 1 2.3 16.88l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82L4.21 4.7a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H12a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09c0 .58.39 1.08 1 1.51.56.4 1.61.21 1.82-.33l.06-.06A2 2 0 0 1 21.7 7.12l-.06.06a1.65 1.65 0 0 0-.33 1.82c.21.54.21 1.19 0 1.73z"></path>
+        </svg>
+      </div>
+      <span class="tab-label">設定</span>
     </button>
   </nav>
 
