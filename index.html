@@ -178,7 +178,12 @@
     }
 
     /* main content */
-    main.app-content{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:18px 14px calc(72px + env(safe-area-inset-bottom));}
+    main.app-content{
+      flex:1;
+      overflow:auto;
+      -webkit-overflow-scrolling:touch;
+      padding:18px 14px calc(65px + env(safe-area-inset-bottom)) 14px;
+    }
 
     /* screen base */
     .screen { display:none; }
@@ -271,7 +276,18 @@
     .tab{flex:1 1 0;max-width:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:6px 4px;background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer}
     .tab svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5}
     .tab.active{color:var(--accent-gold-bright)}
-    footer{background:#080b10;border-top:1px solid var(--accent-gold);color:var(--muted);text-align:center;padding:12px 8px;font-size:13px}
+    
+    footer{
+      background:#080b10;
+      border-top:1px solid var(--accent-gold);
+      color:var(--muted);
+      text-align:center;
+      padding:12px 8px;
+      font-size:13px;
+      margin-top: 24px;
+      margin-left: -14px;
+      margin-right: -14px;
+    }
   
 /* iframe画面全画面対応 */
 #screen-tool.active,
@@ -441,6 +457,11 @@
         <p style="color:var(--muted);margin-top:24px;font-size:0.85rem">ver0.0.8</p>
       </div>
     </section>
+
+    <!-- 画面下部（固定ナビゲーションのすぐ上）に配置されるフッター -->
+    <footer>
+      <p style="margin:0;padding:0;text-align:center;font-size:13px;color:var(--muted)">&copy; 2026 三色同刻 ポータルサイト All Rights Reserved. ver:0.0.8</p>
+    </footer>
   </main>
 
   <!-- bottom navigation -->
@@ -462,8 +483,6 @@
       <div style="font-size:11px;margin-top:4px">設定</div>
     </button>
   </nav>
-
-  <footer><p style="margin:0;padding:12px 8px;text-align:center;font-size:13px;color:var(--muted)">&copy; 2026 三色同刻 ポータルサイト All Rights Reserved. ver:0.0.8</p></footer>
 
   <script>
     (function(){
