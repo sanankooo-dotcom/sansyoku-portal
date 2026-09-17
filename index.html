@@ -213,24 +213,19 @@
 
     .activities { display:flex;flex-direction:column;gap:10px }
     .activity-item{display:flex;gap:12px;align-items:flex-start;padding:10px;border-radius:8px;background:rgba(255,255,255,0.02)}
-    .activity-icon{width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.04)}
+    .activity-icon{width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.04);flex-shrink:0;}
+    .activity-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--accent-gold-bright);
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      display: block;
+    }
     .activity-title{font-weight:700;color:var(--accent-gold-bright);margin-bottom:6px}
     .activity-desc{color:var(--muted);font-size:0.95rem}
-/* 活動内容アイコンのスマホ表示最適化 */
-.activity-icon {
-  flex-shrink: 0; /* スマホ画面でアイコン枠が潰れるのを防ぐ */
-}
-
-.activity-icon svg {
-  width: 24px;
-  height: 24px;
-  stroke: var(--accent-gold-bright);
-  fill: none;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  display: block;
-}
 
     .cta-area{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
     .btn-primary{background:linear-gradient(135deg,var(--accent-gold-bright),var(--accent-gold));color:#000;padding:10px 14px;border-radius:10px;font-weight:700;border:none;cursor:pointer}
@@ -279,7 +274,7 @@
       font-weight: bold;
     }
 
-    /* bottom nav (おしゃれなガラスモーフィズム & 発光アニメーション) */
+    /* bottom nav */
     .bottom-nav {
       position: fixed;
       left: 0;
@@ -315,7 +310,6 @@
       border-radius: 12px;
     }
 
-    /* アイコン背後の光るカプセル背景 */
     .tab-icon-wrapper {
       position: relative;
       display: flex;
@@ -346,30 +340,18 @@
       transition: color 0.3s ease, font-weight 0.3s ease;
     }
 
-    /* ホバー・アクティブ時の状態 */
-    .tab:hover {
-      color: #fff;
-    }
-
-    .tab.active {
-      color: var(--accent-gold-bright);
-    }
-
-    .tab.active .tab-icon-wrapper {
-      background: rgba(255, 255, 255, 0.06);
-    }
-
+    .tab:hover { color: #fff; }
+    .tab.active { color: var(--accent-gold-bright); }
+    .tab.active .tab-icon-wrapper { background: rgba(255, 255, 255, 0.06); }
     .tab.active svg {
       transform: translateY(-2px) scale(1.08);
       filter: drop-shadow(0 0 8px var(--accent-gold-bright));
     }
-
     .tab.active .tab-label {
       font-weight: 700;
       color: var(--accent-gold-bright);
     }
 
-    /* タブ上部のアクティブバー */
     .tab::after {
       content: '';
       position: absolute;
@@ -397,22 +379,26 @@
       margin-left: -14px;
       margin-right: -14px;
     }
-  
-/* iframe画面全画面対応 */
-#screen-tool.active,
-#screen-release.active {
-  margin: -18px -14px 0;
-  height: calc(100vh - 60px - env(safe-area-inset-bottom));
-}
 
-#screen-tool iframe,
-#screen-release iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  display: block;
-}
-</style>
+    /* iframe画面全画面対応 */
+    #screen-tool.active {
+      margin: -18px -14px 0;
+      height: calc(100vh - env(safe-area-inset-bottom));
+    }
+
+    #screen-release.active {
+      margin: -18px -14px 0;
+      height: calc(100vh - 60px - env(safe-area-inset-bottom));
+    }
+
+    #screen-tool iframe,
+    #screen-release iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+  </style>
 </head>
 <body>
 
@@ -466,62 +452,59 @@
         <div class="card">
           <div class="purpose-title">活動内容</div>
           <div class="activities" aria-hidden="false">
-  <!-- アイテムの採集 -->
-  <div class="activity-item">
-    <div class="activity-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24">
-        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-      </svg>
-    </div>
-    <div>
-      <div class="activity-title">アイテムの採集</div>
-      <div class="activity-desc">ゲーム内で必要となる様々なアイテムを採集します。</div>
-    </div>
-  </div>
+            <div class="activity-item">
+              <div class="activity-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+              <div>
+                <div class="activity-title">アイテムの採集</div>
+                <div class="activity-desc">ゲーム内で必要となる様々なアイテムを採集します。</div>
+              </div>
+            </div>
 
-  <!-- アイテムの加工 -->
-  <div class="activity-item">
-    <div class="activity-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24">
-        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-      </svg>
-    </div>
-    <div>
-      <div class="activity-title">アイテムの加工</div>
-      <div class="activity-desc">採集した素材などを加工し、より価値のあるアイテムを作ります。</div>
-    </div>
-  </div>
+            <div class="activity-item">
+              <div class="activity-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                </svg>
+              </div>
+              <div>
+                <div class="activity-title">アイテムの加工</div>
+                <div class="activity-desc">採集した素材などを加工し、より価値のあるアイテムを作ります。</div>
+              </div>
+            </div>
 
-  <!-- アイテムの売買 -->
-  <div class="activity-item">
-    <div class="activity-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24">
-        <line x1="12" y1="1" x2="12" y2="23"></line>
-        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-      </svg>
-    </div>
-    <div>
-      <div class="activity-title">アイテムの売買</div>
-      <div class="activity-desc">アイテムの売買・取引を行い、会社の利益につなげます。</div>
-    </div>
-  </div>
+            <div class="activity-item">
+              <div class="activity-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+              <div>
+                <div class="activity-title">アイテムの売買</div>
+                <div class="activity-desc">アイテムの売買・取引を行い、会社の利益につなげます。</div>
+              </div>
+            </div>
 
-  <!-- 社内イベント -->
-  <div class="activity-item">
-    <div class="activity-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-        <circle cx="9" cy="7" r="4"></circle>
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-      </svg>
-    </div>
-    <div>
-      <div class="activity-title">社内イベント</div>
-      <div class="activity-desc">社員同士で楽しめるイベントを企画・開催します。社員それぞれが自由に参加し、交流できる場を作ります。</div>
-    </div>
-  </div>
-</div>
+            <div class="activity-item">
+              <div class="activity-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <div>
+                <div class="activity-title">社内イベント</div>
+                <div class="activity-desc">社員同士で楽しめるイベントを企画・開催します。社員それぞれが自由に参加し、交流できる場を作ります。</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="section" aria-labelledby="contact-heading">
@@ -553,7 +536,6 @@
       <div class="card">
         <h2 class="purpose-title">設定</h2>
         
-        <!-- 文字サイズ切り替え -->
         <div style="margin-top:16px;">
           <label style="font-weight:bold; color:var(--accent-gold-bright); font-size:0.95rem;">文字サイズ</label>
           <div class="fontsize-selector">
@@ -563,7 +545,6 @@
           </div>
         </div>
 
-        <!-- カラーテーマ切り替え -->
         <div style="margin-top:20px;">
           <label style="font-weight:bold; color:var(--accent-gold-bright); font-size:0.95rem;">カラーテーマ</label>
           <div class="theme-selector">
@@ -582,7 +563,6 @@
       </div>
     </section>
 
-    <!-- 画面下部（固定ナビゲーションのすぐ上）に配置されるフッター -->
     <footer>
       <p style="margin:0;padding:0;text-align:center;font-size:13px;color:var(--muted)">&copy; 2026 三色同刻 ポータルサイト All Rights Reserved. ver:0.0.8</p>
     </footer>
@@ -634,8 +614,14 @@
     (function(){
       const tabs = document.querySelectorAll('.bottom-nav .tab');
       const mapping = { home:'screen-home', tool:'screen-tool', release:'screen-release', settings:'screen-settings' };
+      const appHeader = document.querySelector('.app-header');
 
       function setActive(key, pushHistory=true){
+        // ツールセクション表示時はヘッダーを非表示にする
+        if (appHeader) {
+          appHeader.style.display = (key === 'tool') ? 'none' : 'flex';
+        }
+
         tabs.forEach(t => t.classList.toggle('active', t.dataset.target === key));
         Object.keys(mapping).forEach(k=>{
           const el = document.getElementById(mapping[k]);
