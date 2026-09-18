@@ -5,81 +5,88 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>三色同刻ポータルサイト </title>
   <link rel="icon" href="logo.jpg" />
-  <meta name="theme-color" content="#182030" />
+  <meta name="theme-color" content="#1e293b" />
   <style>
     :root, [data-theme="default"] {
-      --bg-dark: #0f141d;
-      --bg-card: #182030;
-      --bg-card-to: #1d2938;
-      --accent-gold: #d4af37;
-      --accent-gold-bright: #ffd700;
-      --muted: #bfc8d6;
-      --glass: rgba(255,255,255,0.03);
+      --bg-dark: #111827;
+      --bg-card: #1f2937;
+      --bg-card-to: #374151;
+      --accent-gold: #f59e0b;
+      --accent-gold-bright: #fbbf24;
+      --muted: #f3f4f6;
+      --glass: rgba(255, 255, 255, 0.08);
       --font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
       --base-font-size: 16px;
     }
 
     [data-theme="blue"] {
-      --bg-dark: #0a1128;
-      --bg-card: #001f54;
-      --bg-card-to: #034078;
-      --accent-gold: #00b4d8;
-      --accent-gold-bright: #90e0ef;
-      --muted: #caf0f8;
+      --bg-dark: #0f2b48;
+      --bg-card: #154270;
+      --bg-card-to: #1d5994;
+      --accent-gold: #38bdf8;
+      --accent-gold-bright: #7dd3fc;
+      --muted: #f0f9ff;
+      --glass: rgba(56, 189, 248, 0.12);
     }
 
     [data-theme="emerald"] {
-      --bg-dark: #062016;
-      --bg-card: #0d3b2e;
-      --bg-card-to: #145240;
-      --accent-gold: #2ec4b6;
-      --accent-gold-bright: #80ed99;
-      --muted: #c7f9cc;
+      --bg-dark: #064e3b;
+      --bg-card: #047857;
+      --bg-card-to: #059669;
+      --accent-gold: #34d399;
+      --accent-gold-bright: #6ee7b7;
+      --muted: #ecfdf5;
+      --glass: rgba(52, 211, 153, 0.12);
     }
 
     [data-theme="purple"] {
-      --bg-dark: #12091c;
-      --bg-card: #221236;
-      --bg-card-to: #321b4f;
-      --accent-gold: #9d4edd;
-      --accent-gold-bright: #c77dff;
-      --muted: #e0aaff;
+      --bg-dark: #3b0764;
+      --bg-card: #581c87;
+      --bg-card-to: #7e22ce;
+      --accent-gold: #c084fc;
+      --accent-gold-bright: #e9d5ff;
+      --muted: #faf5ff;
+      --glass: rgba(192, 132, 252, 0.12);
     }
 
     [data-theme="ruby"] {
-      --bg-dark: #1a080a;
-      --bg-card: #2e0f14;
-      --bg-card-to: #421820;
-      --accent-gold: #e63946;
-      --accent-gold-bright: #ff6b6b;
-      --muted: #f8d7da;
+      --bg-dark: #7f1d1d;
+      --bg-card: #991b1b;
+      --bg-card-to: #dc2626;
+      --accent-gold: #f87171;
+      --accent-gold-bright: #fca5a5;
+      --muted: #fef2f2;
+      --glass: rgba(248, 113, 113, 0.12);
     }
 
     [data-theme="sunset"] {
-      --bg-dark: #1f100a;
-      --bg-card: #331b12;
-      --bg-card-to: #47261a;
-      --accent-gold: #f77f00;
-      --accent-gold-bright: #fcbf49;
-      --muted: #ffe5d9;
+      --bg-dark: #7c2d12;
+      --bg-card: #9a3412;
+      --bg-card-to: #ea580c;
+      --accent-gold: #fb923c;
+      --accent-gold-bright: #ffedd5;
+      --muted: #fff7ed;
+      --glass: rgba(251, 146, 60, 0.12);
     }
 
     [data-theme="sakura"] {
-      --bg-dark: #1a0c16;
-      --bg-card: #2e1527;
-      --bg-card-to: #421e38;
-      --accent-gold: #f72585;
-      --accent-gold-bright: #ff70a6;
-      --muted: #ffccd5;
+      --bg-dark: #831843;
+      --bg-card: #9d174d;
+      --bg-card-to: #db2777;
+      --accent-gold: #f472b6;
+      --accent-gold-bright: #fbcfe8;
+      --muted: #fdf2f8;
+      --glass: rgba(244, 114, 182, 0.12);
     }
 
     [data-theme="mono"] {
-      --bg-dark: #121212;
-      --bg-card: #1e1e1e;
-      --bg-card-to: #2c2c2c;
-      --accent-gold: #a0a0a0;
+      --bg-dark: #27272a;
+      --bg-card: #3f3f46;
+      --bg-card-to: #52525b;
+      --accent-gold: #e4e4e7;
       --accent-gold-bright: #ffffff;
-      --muted: #d0d0d0;
+      --muted: #f4f4f5;
+      --glass: rgba(255, 255, 255, 0.12);
     }
 
     /* 文字サイズ切り替え */
@@ -124,23 +131,20 @@
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      border: 3px solid var(--accent-gold);
+      border: 3px solid var(--accent-gold-bright);
       object-fit: cover;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
     }
     .splash-title {
       font-size: 1.25rem;
       font-weight: 700;
       letter-spacing: 0.05em;
-      background: linear-gradient(45deg, #ffffff, var(--accent-gold-bright));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: var(--accent-gold-bright);
     }
     .splash-loader {
       width: 28px;
       height: 28px;
-      border: 3px solid rgba(255,255,255,0.1);
+      border: 3px solid rgba(255,255,255,0.2);
       border-top-color: var(--accent-gold-bright);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
@@ -160,19 +164,17 @@
       align-items:center;
       justify-content:space-between;
       padding:0 12px;
-      background: linear-gradient(180deg, rgba(15,20,29,0.95), var(--bg-card));
-      border-bottom: 2px solid var(--accent-gold);
+      background: var(--bg-card);
+      border-bottom: 2px solid var(--accent-gold-bright);
       position:sticky; top:0; z-index:120;
-      box-shadow:0 4px 20px rgba(0,0,0,0.4);
+      box-shadow:0 4px 20px rgba(0,0,0,0.3);
       color:var(--accent-gold-bright);
+      transition: background 0.3s, border-color 0.3s;
     }
     .header-left{display:flex;align-items:center;gap:10px}
-    .logo-img{height:36px;width:36px;border-radius:50%;border:2px solid var(--accent-gold);object-fit:cover;display:block}
+    .logo-img{height:36px;width:36px;border-radius:50%;border:2px solid var(--accent-gold-bright);object-fit:cover;display:block}
     .app-title{
       font-weight:700;font-size:1rem;display:inline-block;line-height:1;
-      background: linear-gradient(45deg,#ffffff,var(--accent-gold-bright));
-      -webkit-background-clip:text; background-clip:text;
-      -webkit-text-fill-color:transparent;
       color:var(--accent-gold-bright);
       letter-spacing:0.03em;
     }
@@ -192,49 +194,51 @@
     /* company page styling */
     .company-hero{
       display:flex;gap:12px;align-items:center;
-      background: linear-gradient(180deg, var(--bg-card), var(--bg-card-to));
-      padding:18px;border-radius:12px;color:var(--accent-gold-bright); margin-bottom:14px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+      background: linear-gradient(135deg, var(--bg-card), var(--bg-card-to));
+      padding:18px;border-radius:12px;color:#fff; margin-bottom:14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.15);
     }
-    .company-hero .logo { width:88px;height:88px;border-radius:12px;overflow:hidden;border:2px solid var(--accent-gold);flex:0 0 88px; }
-    .company-hero h1{font-size:1.1rem;margin-bottom:6px}
+    .company-hero .logo { width:88px;height:88px;border-radius:12px;overflow:hidden;border:2px solid var(--accent-gold-bright);flex:0 0 88px; }
+    .company-hero h1{font-size:1.15rem;margin-bottom:6px;color:var(--accent-gold-bright)}
     .company-hero p{margin:0;color:var(--muted);font-size:0.95rem}
 
     .card{
-      background: linear-gradient(180deg, var(--bg-card), var(--bg-card-to));
-      border:1px solid rgba(255,255,255,0.1);
-      border-radius:12px;padding:14px;color:#fff;
-      box-shadow: 0 6px 22px rgba(0,0,0,0.45);
+      background: linear-gradient(135deg, var(--bg-card), var(--bg-card-to));
+      border:1px solid rgba(255,255,255,0.18);
+      border-radius:12px;padding:16px;color:#fff;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      transition: background 0.3s, border-color 0.3s;
     }
-    .purpose-title { font-size:1rem;color:var(--accent-gold-bright);margin-bottom:8px;display:flex;align-items:center;gap:8px }
+    .purpose-title { font-size:1.05rem;color:var(--accent-gold-bright);margin-bottom:10px;display:flex;align-items:center;gap:8px;font-weight:700 }
     .purpose-list{margin-top:8px;list-style:none;padding-left:0;display:flex;flex-direction:column;gap:8px}
-    .purpose-list li{background:var(--glass);padding:10px;border-radius:8px;color:var(--muted);font-size:0.95rem}
-    .highlight{margin-top:10px;padding:10px;border-radius:8px;background:rgba(255,255,255,0.06);color:var(--accent-gold-bright);font-weight:700}
+    .purpose-list li{background:var(--glass);padding:10px 12px;border-radius:8px;color:var(--muted);font-size:0.95rem;line-height:1.4;border:1px solid rgba(255,255,255,0.05)}
+    .highlight{margin-top:12px;padding:12px;border-radius:8px;background:rgba(255,255,255,0.12);color:var(--accent-gold-bright);font-weight:700;border-left:4px solid var(--accent-gold-bright)}
 
     .activities { display:flex;flex-direction:column;gap:10px }
-    .activity-item{display:flex;gap:12px;align-items:flex-start;padding:10px;border-radius:8px;background:rgba(255,255,255,0.02)}
-    .activity-icon{width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.04);flex-shrink:0;}
+    .activity-item{display:flex;gap:12px;align-items:flex-start;padding:12px;border-radius:8px;background:var(--glass);border:1px solid rgba(255,255,255,0.08)}
+    .activity-icon{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);flex-shrink:0;}
     .activity-icon svg {
       width: 24px;
       height: 24px;
       stroke: var(--accent-gold-bright);
       fill: none;
-      stroke-width: 1.8;
+      stroke-width: 2;
       stroke-linecap: round;
       stroke-linejoin: round;
       display: block;
     }
-    .activity-title{font-weight:700;color:var(--accent-gold-bright);margin-bottom:6px}
-    .activity-desc{color:var(--muted);font-size:0.95rem}
+    .activity-title{font-weight:700;color:var(--accent-gold-bright);margin-bottom:4px}
+    .activity-desc{color:var(--muted);font-size:0.95rem;line-height:1.4}
 
     .cta-area{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .btn-primary{background:linear-gradient(135deg,var(--accent-gold-bright),var(--accent-gold));color:#000;padding:10px 14px;border-radius:10px;font-weight:700;border:none;cursor:pointer}
-    .btn-secondary{background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--muted);padding:10px 12px;border-radius:10px;cursor:pointer;transition:all 0.2s;}
+    .btn-primary{background:var(--accent-gold-bright);color:#000;padding:10px 16px;border-radius:10px;font-weight:700;border:none;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
+    .btn-secondary{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;transition:all 0.2s;}
     .btn-secondary.active {
       border-color: var(--accent-gold-bright);
       color: var(--accent-gold-bright);
       background: var(--glass);
-      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+      box-shadow: 0 0 12px rgba(255,255,255,0.2);
     }
 
     /* theme selection grid */
@@ -254,11 +258,11 @@
       font-size: 0.88rem;
     }
     .color-dot {
-      width: 12px;
-      height: 12px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       display: inline-block;
-      box-shadow: 0 0 6px rgba(255,255,255,0.3);
+      box-shadow: 0 0 8px rgba(0,0,0,0.4);
       flex-shrink: 0;
     }
 
@@ -285,12 +289,13 @@
       align-items: center;
       padding: 6px calc(env(safe-area-inset-left) + 12px) calc(env(safe-area-inset-bottom) + 6px);
       gap: 6px;
-      background: rgba(11, 14, 20, 0.82);
+      background: var(--bg-card);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
       z-index: 130;
-      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.4);
+      transition: background 0.3s;
     }
 
     .tab {
@@ -326,7 +331,7 @@
       height: 22px;
       stroke: currentColor;
       fill: none;
-      stroke-width: 1.8;
+      stroke-width: 2;
       stroke-linecap: round;
       stroke-linejoin: round;
       transition: transform 0.3s ease, filter 0.3s ease, stroke 0.3s ease;
@@ -342,10 +347,10 @@
 
     .tab:hover { color: #fff; }
     .tab.active { color: var(--accent-gold-bright); }
-    .tab.active .tab-icon-wrapper { background: rgba(255, 255, 255, 0.06); }
+    .tab.active .tab-icon-wrapper { background: rgba(255, 255, 255, 0.15); }
     .tab.active svg {
       transform: translateY(-2px) scale(1.08);
-      filter: drop-shadow(0 0 8px var(--accent-gold-bright));
+      filter: drop-shadow(0 0 6px var(--accent-gold-bright));
     }
     .tab.active .tab-label {
       font-weight: 700;
@@ -369,11 +374,11 @@
     }
     
     footer{
-      background:#080b10;
-      border-top:1px solid var(--accent-gold);
+      background: rgba(0, 0, 0, 0.2);
+      border-top:1px solid rgba(255,255,255,0.1);
       color:var(--muted);
       text-align:center;
-      padding:12px 8px;
+      padding:14px 8px;
       font-size:13px;
       margin-top: 24px;
       margin-left: -14px;
@@ -442,7 +447,7 @@
           </ul>
 
           <div class="highlight">自由に活動できることと、貢献が正当に評価されること。</div>
-          <p style="color:var(--muted);margin-top:8px;font-size:0.95rem">
+          <p style="color:var(--muted);margin-top:10px;font-size:0.95rem">
             この2つを大切にしながら、社員と会社がともに発展していくことを目指します。
           </p>
         </div>
@@ -510,7 +515,7 @@
       <section class="section" aria-labelledby="contact-heading">
         <div class="card" style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
           <div style="display:flex;justify-content:space-between;align-items:center">
-            <div style="font-weight:700;color:var(--accent-gold-bright)">お問い合わせ</div>
+            <div style="font-weight:700;color:var(--accent-gold-bright);font-size:1.05rem">お問い合わせ</div>
           </div>
           <p style="color:var(--muted);margin:0">ご質問や参加希望は管理者までご連絡ください。</p>
           <div class="cta-area">
@@ -548,13 +553,13 @@
         <div style="margin-top:20px;">
           <label style="font-weight:bold; color:var(--accent-gold-bright); font-size:0.95rem;">カラーテーマ</label>
           <div class="theme-selector">
-            <button class="btn-secondary theme-btn" data-theme="default"><span class="color-dot" style="background:#ffd700"></span>ゴールド</button>
-            <button class="btn-secondary theme-btn" data-theme="blue"><span class="color-dot" style="background:#90e0ef"></span>ブルー</button>
-            <button class="btn-secondary theme-btn" data-theme="emerald"><span class="color-dot" style="background:#80ed99"></span>エメラルド</button>
-            <button class="btn-secondary theme-btn" data-theme="purple"><span class="color-dot" style="background:#c77dff"></span>アメジスト</button>
-            <button class="btn-secondary theme-btn" data-theme="ruby"><span class="color-dot" style="background:#ff6b6b"></span>ルビー</button>
-            <button class="btn-secondary theme-btn" data-theme="sunset"><span class="color-dot" style="background:#fcbf49"></span>サンセット</button>
-            <button class="btn-secondary theme-btn" data-theme="sakura"><span class="color-dot" style="background:#ff70a6"></span>サクラ</button>
+            <button class="btn-secondary theme-btn" data-theme="default"><span class="color-dot" style="background:#fbbf24"></span>ゴールド</button>
+            <button class="btn-secondary theme-btn" data-theme="blue"><span class="color-dot" style="background:#38bdf8"></span>ブルー</button>
+            <button class="btn-secondary theme-btn" data-theme="emerald"><span class="color-dot" style="background:#34d399"></span>エメラルド</button>
+            <button class="btn-secondary theme-btn" data-theme="purple"><span class="color-dot" style="background:#c084fc"></span>アメジスト</button>
+            <button class="btn-secondary theme-btn" data-theme="ruby"><span class="color-dot" style="background:#f87171"></span>ルビー</button>
+            <button class="btn-secondary theme-btn" data-theme="sunset"><span class="color-dot" style="background:#fb923c"></span>サンセット</button>
+            <button class="btn-secondary theme-btn" data-theme="sakura"><span class="color-dot" style="background:#f472b6"></span>サクラ</button>
             <button class="btn-secondary theme-btn" data-theme="mono"><span class="color-dot" style="background:#ffffff"></span>モノトーン</button>
           </div>
         </div>
@@ -617,7 +622,6 @@
       const appHeader = document.querySelector('.app-header');
 
       function setActive(key, pushHistory=true){
-        // ツールセクション表示時はヘッダーを非表示にする
         if (appHeader) {
           appHeader.style.display = (key === 'tool') ? 'none' : 'flex';
         }
