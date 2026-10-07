@@ -101,65 +101,7 @@
     body{font-family:var(--font-family);min-height:100vh;display:flex;flex-direction:column;background:var(--bg-dark);color:var(--accent-gold);transition: background 0.3s, color 0.3s; font-size: 1rem;}
     a{color:inherit;text-decoration:none}
 
-    /* Splash Screen */
-    .splash-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: var(--bg-dark);
-      color: var(--accent-gold-bright);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      transition: opacity 0.6s ease, visibility 0.6s ease;
-    }
-    .splash-screen.fade-out {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-    .splash-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      animation: splashPulse 1.5s infinite ease-in-out alternate;
-    }
-    .splash-logo {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      border: 3px solid var(--accent-gold-bright);
-      object-fit: cover;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-    }
-    .splash-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      color: var(--accent-gold-bright);
-    }
-    .splash-loader {
-      width: 28px;
-      height: 28px;
-      border: 3px solid rgba(255,255,255,0.2);
-      border-top-color: var(--accent-gold-bright);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    @keyframes splashPulse {
-      from { transform: scale(0.96); }
-      to { transform: scale(1.02); }
-    }
-
-    /* ====== 認証（ログイン）オーバーレイ ====== */
+    /* ====== 認証（ログイン）画面 ====== */
     .auth-overlay {
       position: fixed;
       top: 0;
@@ -170,31 +112,31 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
+      z-index: 9999;
       padding: 16px;
-      transition: opacity 0.3s ease;
     }
     .auth-card {
       background: linear-gradient(135deg, var(--bg-card), var(--bg-card-to));
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 16px;
-      padding: 28px 24px;
+      padding: 32px 24px;
       max-width: 380px;
       width: 100%;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
       text-align: center;
     }
     .auth-card .logo {
-      width: 64px;
-      height: 64px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
       border: 2px solid var(--accent-gold-bright);
       margin-bottom: 12px;
+      object-fit: cover;
     }
     .auth-card h2 {
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       color: var(--accent-gold-bright);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .auth-card p {
       font-size: 0.85rem;
@@ -204,19 +146,19 @@
     .auth-form {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
       text-align: left;
     }
     .auth-input-group label {
       display: block;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: bold;
       color: var(--accent-gold-bright);
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     .auth-input {
       width: 100%;
-      padding: 10px 12px;
+      padding: 12px;
       background: rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 8px;
@@ -230,9 +172,10 @@
     }
     .auth-msg {
       font-size: 0.82rem;
-      min-height: 18px;
+      min-height: 20px;
       margin-top: 4px;
       text-align: center;
+      line-height: 1.4;
     }
     .auth-msg.error { color: #f87171; }
     .auth-msg.success { color: #34d399; }
@@ -243,7 +186,7 @@
       text-decoration: underline;
       cursor: pointer;
       font-size: 0.82rem;
-      margin-top: 14px;
+      margin-top: 16px;
     }
 
     /* header */
@@ -366,7 +309,6 @@
       letter-spacing: 0.01em;
     }
 
-    /* タップ時のアニメーション */
     .app-item:active .app-icon {
       transform: scale(0.92);
       box-shadow: 0 2px 8px rgba(0,0,0,0.4);
@@ -377,7 +319,6 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.45), inset 0 1px 1px rgba(255,255,255,0.4);
     }
 
-    /* 各アイコンの背景色グラデーション */
     .icon-company { background: linear-gradient(135deg, #f59e0b, #d97706); }
     .icon-tool    { background: linear-gradient(135deg, #10b981, #059669); }
     .icon-release { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
@@ -588,12 +529,13 @@
   </style>
 </head>
 <body>
-  <!-- ====== ログイン画面 / 認証モーダル ====== -->
-  <div id="auth-overlay" class="auth-overlay" style="display: none;">
+
+  <!-- ====== ログイン画面（未ログイン時はこれが最前面に表示されます） ====== -->
+  <div id="auth-overlay" class="auth-overlay">
     <div class="auth-card">
       <img src="logo.jpg" alt="三色同刻" class="logo">
       <h2 id="auth-title">ログイン</h2>
-      <p id="auth-desc">メンバー専用ポータルへのアクセス</p>
+      <p id="auth-desc">三色同刻ポータルへのアクセス</p>
       
       <form id="auth-form" class="auth-form">
         <div class="auth-input-group">
@@ -617,7 +559,7 @@
     </div>
   </div>
 
-  <!-- ====== メインアプリ画面 ====== -->
+  <!-- ====== ポータル本体 ====== -->
   <header class="app-header" role="banner">
     <div class="header-left">
       <img class="logo-img" src="logo.jpg" alt="三色同刻 ロゴ">
@@ -859,7 +801,6 @@
   </nav>
 
   <script>
-  
     // ==========================================
     // 1. Supabase 初期設定
     // （※ここにSupabaseのURLとanonキーを入力してください）
@@ -877,7 +818,7 @@
     }
 
     // ==========================================
-    // 2. 認証（ログイン・会員登録）の処理
+    // 2. 認証（ログイン・新規登録）処理
     // ==========================================
     const authOverlay = document.getElementById('auth-overlay');
     const authForm = document.getElementById('auth-form');
@@ -892,6 +833,7 @@
 
     let isSignUpMode = false;
 
+    // ログイン / 新規登録の表示切り替え
     if (authSwitchMode) {
       authSwitchMode.addEventListener('click', () => {
         isSignUpMode = !isSignUpMode;
@@ -903,19 +845,20 @@
           authSwitchMode.textContent = '既にアカウントをお持ちの方はこちら';
         } else {
           authTitle.textContent = 'ログイン';
-          authDesc.textContent = 'メンバー専用ポータルへのアクセス';
+          authDesc.textContent = '三色同刻ポータルへのアクセス';
           authSubmitBtn.textContent = 'ログイン';
           authSwitchMode.textContent = 'アカウントをお持ちでない方は新規登録';
         }
       });
     }
 
+    // フォーム送信
     if (authForm) {
       authForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (!supabase) {
           authMsg.className = 'auth-msg error';
-          authMsg.textContent = 'SupabaseのURLとキーが正しく設定されていません。';
+          authMsg.textContent = 'SupabaseのURLとキーが設定されていません。';
           return;
         }
 
@@ -927,6 +870,7 @@
 
         try {
           if (isSignUpMode) {
+            // 新規登録
             const { data, error } = await supabase.auth.signUp({ email, password });
             if (error) throw error;
             
@@ -938,6 +882,7 @@
               authMsg.textContent = '登録が完了しました！';
             }
           } else {
+            // ログイン
             const { data, error } = await supabase.auth.signInWithPassword({ email, password });
             if (error) throw error;
           }
@@ -950,6 +895,7 @@
       });
     }
 
+    // ログアウト処理
     if (logoutBtn) {
       logoutBtn.addEventListener('click', async () => {
         if (confirm('ログアウトしますか？') && supabase) {
@@ -958,25 +904,28 @@
       });
     }
 
-    // ログイン状態のチェック
+    // ログイン状態の監視
     if (supabase) {
       supabase.auth.onAuthStateChange((event, session) => {
         if (session && session.user) {
-          if (authOverlay) authOverlay.style.display = 'none';
+          // ログイン済み：ログイン画面を隠してポータルを表示
+          authOverlay.style.display = 'none';
           const email = session.user.email || 'ログイン中';
           if (headerUserEmail) headerUserEmail.textContent = email;
           if (settingsUserEmail) settingsUserEmail.textContent = email;
         } else {
-          if (authOverlay) authOverlay.style.display = 'flex';
+          // 未ログイン：ログイン画面を最前面に表示
+          authOverlay.style.display = 'flex';
           if (headerUserEmail) headerUserEmail.textContent = '';
           if (settingsUserEmail) settingsUserEmail.textContent = '未ログイン';
         }
       });
     } else {
-      if (authOverlay) authOverlay.style.display = 'flex';
+      // Supabaseのキーが未設定の場合
+      authOverlay.style.display = 'flex';
       if (authMsg) {
         authMsg.className = 'auth-msg error';
-        authMsg.textContent = 'Supabaseのキーを設定してください。';
+        authMsg.textContent = 'SUPABASE_URL と SUPABASE_ANON_KEY を設定してください。';
       }
     }
 
