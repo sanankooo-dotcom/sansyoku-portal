@@ -3,9 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>三色同刻ポータルサイト </title>
+  <title>三色同刻ポータルサイト</title>
   <link rel="icon" href="logo.jpg" />
   <meta name="theme-color" content="#1e293b" />
+  <!-- Supabase JS Client (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root, [data-theme="default"] {
       --bg-dark: #111827;
@@ -157,6 +159,93 @@
       to { transform: scale(1.02); }
     }
 
+    /* ====== 認証（ログイン）オーバーレイ ====== */
+    .auth-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+      transition: opacity 0.3s ease;
+    }
+    .auth-card {
+      background: linear-gradient(135deg, var(--bg-card), var(--bg-card-to));
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 28px 24px;
+      max-width: 380px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+    .auth-card .logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 2px solid var(--accent-gold-bright);
+      margin-bottom: 12px;
+    }
+    .auth-card h2 {
+      font-size: 1.25rem;
+      color: var(--accent-gold-bright);
+      margin-bottom: 8px;
+    }
+    .auth-card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: left;
+    }
+    .auth-input-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: var(--accent-gold-bright);
+      margin-bottom: 4px;
+    }
+    .auth-input {
+      width: 100%;
+      padding: 10px 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .auth-input:focus {
+      border-color: var(--accent-gold-bright);
+    }
+    .auth-msg {
+      font-size: 0.82rem;
+      min-height: 18px;
+      margin-top: 4px;
+      text-align: center;
+    }
+    .auth-msg.error { color: #f87171; }
+    .auth-msg.success { color: #34d399; }
+    .auth-switch-link {
+      background: none;
+      border: none;
+      color: var(--accent-gold-bright);
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 0.82rem;
+      margin-top: 14px;
+    }
+
     /* header */
     .app-header{
       height:56px;
@@ -172,11 +261,20 @@
       transition: background 0.3s, border-color 0.3s;
     }
     .header-left{display:flex;align-items:center;gap:10px}
+    .header-right{display:flex;align-items:center;gap:8px}
     .logo-img{height:36px;width:36px;border-radius:50%;border:2px solid var(--accent-gold-bright);object-fit:cover;display:block}
     .app-title{
       font-weight:700;font-size:1rem;display:inline-block;line-height:1;
       color:var(--accent-gold-bright);
       letter-spacing:0.03em;
+    }
+    .user-badge {
+      font-size: 0.75rem;
+      color: var(--muted);
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     /* main content */
@@ -316,6 +414,7 @@
     .cta-area{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
     .btn-primary{background:var(--accent-gold-bright);color:#000;padding:10px 16px;border-radius:10px;font-weight:700;border:none;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
     .btn-secondary{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;transition:all 0.2s;}
+    .btn-danger{background:#dc2626;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-weight:bold;cursor:pointer;}
     .btn-secondary.active {
       border-color: var(--accent-gold-bright);
       color: var(--accent-gold-bright);
@@ -499,16 +598,49 @@
     </div>
   </div>
 
+  <!-- ====== ログイン画面 / 認証モーダル ====== -->
+  <div id="auth-overlay" class="auth-overlay" style="display: none;">
+    <div class="auth-card">
+      <img src="logo.jpg" alt="三色同刻" class="logo">
+      <h2 id="auth-title">ログイン</h2>
+      <p id="auth-desc">メンバー専用ポータルへのアクセス</p>
+      
+      <form id="auth-form" class="auth-form">
+        <div class="auth-input-group">
+          <label for="auth-email">メールアドレス</label>
+          <input type="email" id="auth-email" class="auth-input" placeholder="example@mail.com" required autocomplete="email">
+        </div>
+        
+        <div class="auth-input-group">
+          <label for="auth-password">パスワード</label>
+          <input type="password" id="auth-password" class="auth-input" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+
+        <div id="auth-msg" class="auth-msg"></div>
+
+        <button type="submit" id="auth-submit-btn" class="btn-primary" style="margin-top: 8px;">ログイン</button>
+      </form>
+
+      <button type="button" id="auth-switch-mode" class="auth-switch-link">
+        アカウントをお持ちでない方は新規登録
+      </button>
+    </div>
+  </div>
+
+  <!-- ====== メインアプリ画面 ====== -->
   <header class="app-header" role="banner">
     <div class="header-left">
       <img class="logo-img" src="logo.jpg" alt="三色同刻 ロゴ">
       <div class="app-title">三色同刻ポータル</div>
     </div>
+    <div class="header-right">
+      <span id="header-user-email" class="user-badge"></span>
+    </div>
   </header>
 
   <main class="app-content" role="main">
 
-    <!-- ====== HOME (アプリアイコン一覧) ====== -->
+    <!-- ====== HOME ====== -->
     <section id="screen-home" class="screen active" aria-label="ホーム">
       <div class="company-hero" role="region" aria-label="ウェルカム">
         <div class="logo"><img src="logo2.jpg" alt="ロゴ" style="width:100%;height:100%;object-fit:cover"></div>
@@ -548,10 +680,7 @@
           <!-- 設定 -->
           <a class="app-item" href="#settings" data-link="settings">
             <div class="app-icon icon-settings">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="#4A5568">
-  <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-  <path d="M19.4 13a7.8 7.8 0 0 0 0-2l2.1-1.6c.2-.2.3-.5.1-.8l-2-3.5c-.1-.2-.4-.3-.7-.2l-2.5 1c-.8-.6-1.6-1.1-2.5-1.4l-.4-2.6C13.5 1.6 13.3 1.4 13 1.4h-4c-.3 0-.5.2-.6.5l-.4 2.6c-.9.3-1.7.8-2.5 1.4l-2.5-1c-.3-.1-.6 0-.7.2l-2 3.5c-.1.3 0 .6.2.8L2.6 11a7.8 7.8 0 0 0 0 2l-2.1 1.6c-.2.2-.3.5-.1.8l2 3.5c.1.2.4.3.7.2l2.5-1c.8.6 1.6 1.1 2.5 1.4l.4 2.6c.1.3.3.5.6.5h4c.3 0 .5-.2.6-.5l.4-2.6c.9-.3 1.7-.8 2.5-1.4l2.5 1c.3.1.6 0 .7-.2l2-3.5c.1-.3 0-.6-.2-.8L19.4 13zm-7.4 2.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/>
-</svg>
+              <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 13a7.8 7.8 0 0 0 0-2l2.1-1.6c.2-.2.3-.5.1-.8l-2-3.5c-.1-.2-.4-.3-.7-.2l-2.5 1c-.8-.6-1.6-1.1-2.5-1.4l-.4-2.6C13.5 1.6 13.3 1.4 13 1.4h-4c-.3 0-.5.2-.6.5l-.4 2.6c-.9.3-1.7.8-2.5 1.4l-2.5-1c-.3-.1-.6 0-.7.2l-2 3.5c-.1.3 0 .6.2.8L2.6 11a7.8 7.8 0 0 0 0 2l-2.1 1.6c-.2.2-.3.5-.1.8l2 3.5c.1.2.4.3.7.2l2.5-1c.8.6 1.6 1.1 2.5 1.4l.4 2.6c.1.3.3.5.6.5h4c.3 0 .5-.2.6-.5l.4-2.6c.9-.3 1.7-.8 2.5-1.4l2.5 1c.3.1.6 0 .7-.2l2-3.5c.1-.3 0-.6-.2-.8L19.4 13zm-7.4 2.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
             </div>
             <span class="app-label">設定</span>
           </a>
@@ -559,7 +688,7 @@
       </div>
     </section>
 
-    <!-- ====== COMPANY / 会社概要 ====== -->
+    <!-- ====== COMPANY ====== -->
     <section id="screen-company" class="screen" aria-label="会社概要" aria-hidden="true">
       <div class="company-hero" role="region" aria-label="会社について">
         <div class="logo"><img src="logo2.jpg" alt="ロゴ" style="width:100%;height:100%;object-fit:cover"></div>
@@ -594,9 +723,7 @@
           <div class="activities" aria-hidden="false">
             <div class="activity-item">
               <div class="activity-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                </svg>
+                <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
               </div>
               <div>
                 <div class="activity-title">アイテムの採集</div>
@@ -606,9 +733,7 @@
 
             <div class="activity-item">
               <div class="activity-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-                </svg>
+                <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
               </div>
               <div>
                 <div class="activity-title">アイテムの加工</div>
@@ -618,10 +743,7 @@
 
             <div class="activity-item">
               <div class="activity-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <line x1="12" y1="1" x2="12" y2="23"></line>
-                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                </svg>
+                <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
               </div>
               <div>
                 <div class="activity-title">アイテムの売買</div>
@@ -631,12 +753,7 @@
 
             <div class="activity-item">
               <div class="activity-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="9" cy="7" r="4"></circle>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
+                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
               </div>
               <div>
                 <div class="activity-title">社内イベント</div>
@@ -649,9 +766,7 @@
 
       <section class="section" aria-labelledby="contact-heading">
         <div class="card" style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div style="font-weight:700;color:var(--accent-gold-bright);font-size:1.05rem">お問い合わせ</div>
-          </div>
+          <div style="font-weight:700;color:var(--accent-gold-bright);font-size:1.05rem">お問い合わせ</div>
           <p style="color:var(--muted);margin:0">ご質問や参加希望は管理者までご連絡ください。</p>
           <div class="cta-area">
             <a class="btn-primary" href="#tool" data-link="tool">納品報告ツールへ</a>
@@ -661,22 +776,29 @@
       </section>
     </section>
 
-    <!-- ====== TOOL ページ ====== -->
+    <!-- ====== TOOL ====== -->
     <section id="screen-tool" class="screen" aria-label="ツール" aria-hidden="true">
       <iframe src="https://script.google.com/macros/s/AKfycby-v3zwjGqjjUXkqxUV2DM9gL8z4fJPP1hjjZcfyEROp5mxFjIuzI2cxbqZrcrlvtxE/exec" title="納品ツール"></iframe>
     </section>
 
-    <!-- ====== RELEASE ページ ====== -->
+    <!-- ====== RELEASE ====== -->
     <section id="screen-release" class="screen" aria-label="リリース" aria-hidden="true">
       <iframe src="https://script.google.com/macros/s/AKfycbx3LrFnfuEAENr9U6T7bkIJ1QIq6Ks5ebZIZu1x4BqpybWcQ9Xi2HKvMRimMITwHF7I/exec" title="リリース情報"></iframe>
     </section>
 
-    <!-- ====== SETTINGS ページ ====== -->
+    <!-- ====== SETTINGS ====== -->
     <section id="screen-settings" class="screen" aria-label="設定" aria-hidden="true">
       <div class="card">
         <h2 class="purpose-title">設定</h2>
         
-        <div style="margin-top:16px;">
+        <!-- アカウント情報 & ログアウト -->
+        <div style="margin-top:16px; padding:12px; background:var(--glass); border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+          <div style="font-weight:bold; color:var(--accent-gold-bright); font-size:0.95rem; margin-bottom:4px;">ログインアカウント</div>
+          <div id="settings-user-email" style="font-size:0.9rem; color:var(--muted); word-break:break-all; margin-bottom:12px;">確認中...</div>
+          <button id="logout-btn" class="btn-danger">ログアウト</button>
+        </div>
+
+        <div style="margin-top:20px;">
           <label style="font-weight:bold; color:var(--accent-gold-bright); font-size:0.95rem;">文字サイズ</label>
           <div class="fontsize-selector">
             <button class="btn-secondary fontsize-btn" data-fontsize="small">小</button>
@@ -699,12 +821,12 @@
           </div>
         </div>
 
-        <p style="color:var(--muted);margin-top:24px;font-size:0.85rem">ver0.0.8</p>
+        <p style="color:var(--muted);margin-top:24px;font-size:0.85rem">ver0.0.9</p>
       </div>
     </section>
 
     <footer>
-      <p style="margin:0;padding:0;text-align:center;font-size:13px;color:var(--muted)">&copy; 2026 三色同刻 ポータルサイト All Rights Reserved. ver:0.0.8</p>
+      <p style="margin:0;padding:0;text-align:center;font-size:13px;color:var(--muted)">&copy; 2026 三色同刻 ポータルサイト All Rights Reserved. ver:0.0.9</p>
     </footer>
   </main>
 
@@ -712,54 +834,160 @@
   <nav class="bottom-nav" role="navigation" aria-label="メインナビ">
     <button class="tab active" data-target="home" aria-label="ホーム">
       <div class="tab-icon-wrapper">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-          <polyline points="9 22 9 12 15 12 15 22"></polyline>
-        </svg>
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
       </div>
       <span class="tab-label">ホーム</span>
     </button>
 
     <button class="tab" data-target="company" aria-label="会社概要">
       <div class="tab-icon-wrapper">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M3 21h18M3 10h18M3 6l9-4 9 4M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"></path>
-        </svg>
+        <svg viewBox="0 0 24 24"><path d="M3 21h18M3 10h18M3 6l9-4 9 4M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"></path></svg>
       </div>
       <span class="tab-label">会社概要</span>
     </button>
 
     <button class="tab" data-target="tool" aria-label="ツール">
       <div class="tab-icon-wrapper">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-        </svg>
+        <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
       </div>
       <span class="tab-label">ツール</span>
     </button>
 
     <button class="tab" data-target="release" aria-label="リリース">
       <div class="tab-icon-wrapper">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-        </svg>
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
       </div>
       <span class="tab-label">リリース</span>
     </button>
 
     <button class="tab" data-target="settings" aria-label="設定">
       <div class="tab-icon-wrapper">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="#4A5568">
-  <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-  <path d="M19.4 13a7.8 7.8 0 0 0 0-2l2.1-1.6c.2-.2.3-.5.1-.8l-2-3.5c-.1-.2-.4-.3-.7-.2l-2.5 1c-.8-.6-1.6-1.1-2.5-1.4l-.4-2.6C13.5 1.6 13.3 1.4 13 1.4h-4c-.3 0-.5.2-.6.5l-.4 2.6c-.9.3-1.7.8-2.5 1.4l-2.5-1c-.3-.1-.6 0-.7.2l-2 3.5c-.1.3 0 .6.2.8L2.6 11a7.8 7.8 0 0 0 0 2l-2.1 1.6c-.2.2-.3.5-.1.8l2 3.5c.1.2.4.3.7.2l2.5-1c.8.6 1.6 1.1 2.5 1.4l.4 2.6c.1.3.3.5.6.5h4c.3 0 .5-.2.6-.5l.4-2.6c.9-.3 1.7-.8 2.5-1.4l2.5 1c.3.1.6 0 .7-.2l2-3.5c.1-.3 0-.6-.2-.8L19.4 13zm-7.4 2.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/>
-</svg>
+        <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 13a7.8 7.8 0 0 0 0-2l2.1-1.6c.2-.2.3-.5.1-.8l-2-3.5c-.1-.2-.4-.3-.7-.2l-2.5 1c-.8-.6-1.6-1.1-2.5-1.4l-.4-2.6C13.5 1.6 13.3 1.4 13 1.4h-4c-.3 0-.5.2-.6.5l-.4 2.6c-.9.3-1.7.8-2.5 1.4l-2.5-1c-.3-.1-.6 0-.7.2l-2 3.5c-.1.3 0 .6.2.8L2.6 11a7.8 7.8 0 0 0 0 2l-2.1 1.6c-.2.2-.3.5-.1.8l2 3.5c.1.2.4.3.7.2l2.5-1c.8.6 1.6 1.1 2.5 1.4l.4 2.6c.1.3.3.5.6.5h4c.3 0 .5-.2.6-.5l.4-2.6c.9-.3 1.7-.8 2.5-1.4l2.5 1c.3.1.6 0 .7-.2l2-3.5c.1-.3 0-.6-.2-.8L19.4 13zm-7.4 2.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
       </div>
       <span class="tab-label">設定</span>
     </button>
   </nav>
 
   <script>
+    // ==========================================
+    // 1. Supabase 初期設定
+    // （※ここにステップ1で取得したURLとanonキーを入力してください）
+    // ==========================================
+    const SUPABASE_URL = 'https://gxjrmmuvqwpvntiiqlne.supabase.co/rest/v1/';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4anJtbXV2cXdwdm50aWlxbG5lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzNzc0ODUsImV4cCI6MjEwNjk1MzQ4NX0.-31QyeJG0Juearq4QVTAFm5neILkcYEo85G-IE0BP2s';
+    
+    // Supabaseクライアントの初期化
+    const supabase = (SUPABASE_URL && SUPABASE_URL !== 'YOUR_SUPABASE_URL')
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+      : null;
+
+    // ==========================================
+    // 2. 認証（ログイン・会員登録）の処理
+    // ==========================================
+    const authOverlay = document.getElementById('auth-overlay');
+    const authForm = document.getElementById('auth-form');
+    const authTitle = document.getElementById('auth-title');
+    const authDesc = document.getElementById('auth-desc');
+    const authSubmitBtn = document.getElementById('auth-submit-btn');
+    const authSwitchMode = document.getElementById('auth-switch-mode');
+    const authMsg = document.getElementById('auth-msg');
+    const headerUserEmail = document.getElementById('header-user-email');
+    const settingsUserEmail = document.getElementById('settings-user-email');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    let isSignUpMode = false;
+
+    // ログイン / 新規登録の切り替え
+    authSwitchMode.addEventListener('click', () => {
+      isSignUpMode = !isSignUpMode;
+      authMsg.textContent = '';
+      if (isSignUpMode) {
+        authTitle.textContent = '新規登録';
+        authDesc.textContent = '新しいアカウントを作成します';
+        authSubmitBtn.textContent = '登録する';
+        authSwitchMode.textContent = '既にアカウントをお持ちの方はこちら';
+      } else {
+        authTitle.textContent = 'ログイン';
+        authDesc.textContent = 'メンバー専用ポータルへのアクセス';
+        authSubmitBtn.textContent = 'ログイン';
+        authSwitchMode.textContent = 'アカウントをお持ちでない方は新規登録';
+      }
+    });
+
+    // フォーム送信
+    authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!supabase) {
+        authMsg.className = 'auth-msg error';
+        authMsg.textContent = 'SupabaseのURLとキーが設定されていません。';
+        return;
+      }
+
+      const email = document.getElementById('auth-email').value.trim();
+      const password = document.getElementById('auth-password').value;
+      authSubmitBtn.disabled = true;
+      authMsg.textContent = '通信中...';
+      authMsg.className = 'auth-msg';
+
+      try {
+        if (isSignUpMode) {
+          // 新規登録
+          const { data, error } = await supabase.auth.signUp({ email, password });
+          if (error) throw error;
+          
+          if (data.user && !data.session) {
+            authMsg.className = 'auth-msg success';
+            authMsg.textContent = '確認メールを送信しました。メール内のリンクを開いてください。';
+          } else {
+            authMsg.className = 'auth-msg success';
+            authMsg.textContent = '登録が完了しました！';
+          }
+        } else {
+          // ログイン
+          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+          if (error) throw error;
+        }
+      } catch (err) {
+        authMsg.className = 'auth-msg error';
+        authMsg.textContent = err.message || '認証に失敗しました。';
+      } finally {
+        authSubmitBtn.disabled = false;
+      }
+    });
+
+    // ログアウト処理
+    logoutBtn.addEventListener('click', async () => {
+      if (confirm('ログアウトしますか？') && supabase) {
+        await supabase.auth.signOut();
+      }
+    });
+
+    // 認証状態の監視
+    if (supabase) {
+      supabase.auth.onAuthStateChange((event, session) => {
+        if (session && session.user) {
+          // ログイン中：オーバーレイを隠す
+          authOverlay.style.display = 'none';
+          const email = session.user.email || 'ログイン中';
+          headerUserEmail.textContent = email;
+          settingsUserEmail.textContent = email;
+        } else {
+          // 未ログイン：ログインオーバーレイを表示
+          authOverlay.style.display = 'flex';
+          headerUserEmail.textContent = '';
+          settingsUserEmail.textContent = '未ログイン';
+        }
+      });
+    } else {
+      // Supabase未設定時のフォールバック（初期確認用）
+      authOverlay.style.display = 'flex';
+      authMsg.className = 'auth-msg error';
+      authMsg.textContent = 'SUPABASE_URL と SUPABASE_ANON_KEY を設定してください。';
+    }
+
+    // ==========================================
+    // 3. ナビゲーション・UI制御
+    // ==========================================
     (function(){
       const tabs = document.querySelectorAll('.bottom-nav .tab');
       const mapping = { 
