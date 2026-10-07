@@ -870,16 +870,34 @@
 
   <script>
     // ==========================================
+    // 0. スプラッシュ画面を最優先で消す処理（安全策）
+    // ==========================================
+    function hideSplashScreen() {
+      const splash = document.getElementById('splash-screen');
+      if (splash && !splash.classList.contains('fade-out')) {
+        splash.classList.add('fade-out');
+      }
+    }
+    // 画面が表示されたら即座に0.6秒後にフェードアウト
+    setTimeout(hideSplashScreen, 600);
+    // 念のための保険（最大1.2秒で必ず消す）
+    setTimeout(hideSplashScreen, 1200);
+
+    // ==========================================
     // 1. Supabase 初期設定
-    // （※ここにステップ1で取得したURLとanonキーを入力してください）
+    // （※ここにSupabaseのURLとanonキーを入力してください）
     // ==========================================
     const SUPABASE_URL = 'https://gxjrmmuvqwpvntiiqlne.supabase.co/rest/v1/';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4anJtbXV2cXdwdm50aWlxbG5lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzNzc0ODUsImV4cCI6MjEwNjk1MzQ4NX0.-31QyeJG0Juearq4QVTAFm5neILkcYEo85G-IE0BP2s';
     
-    // Supabaseクライアントの初期化
-    const supabase = (SUPABASE_URL && SUPABASE_URL !== 'YOUR_SUPABASE_URL')
-      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-      : null;
+    let supabase = null;
+    try {
+      if (window.supabase && SUPABASE_URL && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      }
+    } catch (e) {
+      console.error('Supabase initialization error:', e);
+    }
 
     // ==========================================
     // 2. 認証（ログイン・会員登録）の処理
@@ -897,92 +915,92 @@
 
     let isSignUpMode = false;
 
-    // ログイン / 新規登録の切り替え
-    authSwitchMode.addEventListener('click', () => {
-      isSignUpMode = !isSignUpMode;
-      authMsg.textContent = '';
-      if (isSignUpMode) {
-        authTitle.textContent = '新規登録';
-        authDesc.textContent = '新しいアカウントを作成します';
-        authSubmitBtn.textContent = '登録する';
-        authSwitchMode.textContent = '既にアカウントをお持ちの方はこちら';
-      } else {
-        authTitle.textContent = 'ログイン';
-        authDesc.textContent = 'メンバー専用ポータルへのアクセス';
-        authSubmitBtn.textContent = 'ログイン';
-        authSwitchMode.textContent = 'アカウントをお持ちでない方は新規登録';
-      }
-    });
-
-    // フォーム送信
-    authForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!supabase) {
-        authMsg.className = 'auth-msg error';
-        authMsg.textContent = 'SupabaseのURLとキーが設定されていません。';
-        return;
-      }
-
-      const email = document.getElementById('auth-email').value.trim();
-      const password = document.getElementById('auth-password').value;
-      authSubmitBtn.disabled = true;
-      authMsg.textContent = '通信中...';
-      authMsg.className = 'auth-msg';
-
-      try {
+    if (authSwitchMode) {
+      authSwitchMode.addEventListener('click', () => {
+        isSignUpMode = !isSignUpMode;
+        authMsg.textContent = '';
         if (isSignUpMode) {
-          // 新規登録
-          const { data, error } = await supabase.auth.signUp({ email, password });
-          if (error) throw error;
-          
-          if (data.user && !data.session) {
-            authMsg.className = 'auth-msg success';
-            authMsg.textContent = '確認メールを送信しました。メール内のリンクを開いてください。';
-          } else {
-            authMsg.className = 'auth-msg success';
-            authMsg.textContent = '登録が完了しました！';
-          }
+          authTitle.textContent = '新規登録';
+          authDesc.textContent = '新しいアカウントを作成します';
+          authSubmitBtn.textContent = '登録する';
+          authSwitchMode.textContent = '既にアカウントをお持ちの方はこちら';
         } else {
-          // ログイン
-          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-          if (error) throw error;
+          authTitle.textContent = 'ログイン';
+          authDesc.textContent = 'メンバー専用ポータルへのアクセス';
+          authSubmitBtn.textContent = 'ログイン';
+          authSwitchMode.textContent = 'アカウントをお持ちでない方は新規登録';
         }
-      } catch (err) {
-        authMsg.className = 'auth-msg error';
-        authMsg.textContent = err.message || '認証に失敗しました。';
-      } finally {
-        authSubmitBtn.disabled = false;
-      }
-    });
+      });
+    }
 
-    // ログアウト処理
-    logoutBtn.addEventListener('click', async () => {
-      if (confirm('ログアウトしますか？') && supabase) {
-        await supabase.auth.signOut();
-      }
-    });
+    if (authForm) {
+      authForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!supabase) {
+          authMsg.className = 'auth-msg error';
+          authMsg.textContent = 'SupabaseのURLとキーが正しく設定されていません。';
+          return;
+        }
 
-    // 認証状態の監視
+        const email = document.getElementById('auth-email').value.trim();
+        const password = document.getElementById('auth-password').value;
+        authSubmitBtn.disabled = true;
+        authMsg.textContent = '通信中...';
+        authMsg.className = 'auth-msg';
+
+        try {
+          if (isSignUpMode) {
+            const { data, error } = await supabase.auth.signUp({ email, password });
+            if (error) throw error;
+            
+            if (data.user && !data.session) {
+              authMsg.className = 'auth-msg success';
+              authMsg.textContent = '確認メールを送信しました。メールをご確認ください。';
+            } else {
+              authMsg.className = 'auth-msg success';
+              authMsg.textContent = '登録が完了しました！';
+            }
+          } else {
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) throw error;
+          }
+        } catch (err) {
+          authMsg.className = 'auth-msg error';
+          authMsg.textContent = err.message || '認証に失敗しました。';
+        } finally {
+          authSubmitBtn.disabled = false;
+        }
+      });
+    }
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+        if (confirm('ログアウトしますか？') && supabase) {
+          await supabase.auth.signOut();
+        }
+      });
+    }
+
+    // ログイン状態のチェック
     if (supabase) {
       supabase.auth.onAuthStateChange((event, session) => {
         if (session && session.user) {
-          // ログイン中：オーバーレイを隠す
-          authOverlay.style.display = 'none';
+          if (authOverlay) authOverlay.style.display = 'none';
           const email = session.user.email || 'ログイン中';
-          headerUserEmail.textContent = email;
-          settingsUserEmail.textContent = email;
+          if (headerUserEmail) headerUserEmail.textContent = email;
+          if (settingsUserEmail) settingsUserEmail.textContent = email;
         } else {
-          // 未ログイン：ログインオーバーレイを表示
-          authOverlay.style.display = 'flex';
-          headerUserEmail.textContent = '';
-          settingsUserEmail.textContent = '未ログイン';
+          if (authOverlay) authOverlay.style.display = 'flex';
+          if (headerUserEmail) headerUserEmail.textContent = '';
+          if (settingsUserEmail) settingsUserEmail.textContent = '未ログイン';
         }
       });
     } else {
-      // Supabase未設定時のフォールバック（初期確認用）
-      authOverlay.style.display = 'flex';
-      authMsg.className = 'auth-msg error';
-      authMsg.textContent = 'SUPABASE_URL と SUPABASE_ANON_KEY を設定してください。';
+      if (authOverlay) authOverlay.style.display = 'flex';
+      if (authMsg) {
+        authMsg.className = 'auth-msg error';
+        authMsg.textContent = 'Supabaseのキーを設定してください。';
+      }
     }
 
     // ==========================================
@@ -1040,7 +1058,7 @@
         if(Object.keys(mapping).includes(h)) setActive(h, false);
       });
 
-      // テーマ切り替え機能
+      // テーマ切り替え
       const themeBtns = document.querySelectorAll('.theme-btn');
       function applyTheme(themeName) {
         document.documentElement.setAttribute('data-theme', themeName);
@@ -1049,17 +1067,13 @@
           btn.classList.toggle('active', btn.dataset.theme === themeName);
         });
       }
-
       const savedTheme = localStorage.getItem('app-theme') || 'default';
       applyTheme(savedTheme);
-
       themeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          applyTheme(btn.dataset.theme);
-        });
+        btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
       });
 
-      // 文字サイズ切り替え機能
+      // 文字サイズ切り替え
       const fontsizeBtns = document.querySelectorAll('.fontsize-btn');
       function applyFontSize(size) {
         document.documentElement.setAttribute('data-fontsize', size);
@@ -1068,24 +1082,10 @@
           btn.classList.toggle('active', btn.dataset.fontsize === size);
         });
       }
-
       const savedFontSize = localStorage.getItem('app-fontsize') || 'medium';
       applyFontSize(savedFontSize);
-
       fontsizeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          applyFontSize(btn.dataset.fontsize);
-        });
-      });
-
-      // 起動スプラッシュ画面制御
-      window.addEventListener('load', () => {
-        const splash = document.getElementById('splash-screen');
-        if (splash) {
-          setTimeout(() => {
-            splash.classList.add('fade-out');
-          }, 800);
-        }
+        btn.addEventListener('click', () => applyFontSize(btn.dataset.fontsize));
       });
     })();
   </script>
