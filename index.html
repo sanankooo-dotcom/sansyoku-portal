@@ -588,16 +588,6 @@
   </style>
 </head>
 <body>
-
-  <!-- ====== 起動スプラッシュ画面 ====== -->
-  <div id="splash-screen" class="splash-screen" aria-hidden="true">
-    <div class="splash-content">
-      <img src="logo.jpg" alt="三色同刻" class="splash-logo">
-      <div class="splash-title">三色同刻ポータル</div>
-      <div class="splash-loader"></div>
-    </div>
-  </div>
-
   <!-- ====== ログイン画面 / 認証モーダル ====== -->
   <div id="auth-overlay" class="auth-overlay" style="display: none;">
     <div class="auth-card">
@@ -869,20 +859,7 @@
   </nav>
 
   <script>
-    // ==========================================
-    // 0. スプラッシュ画面を最優先で消す処理（安全策）
-    // ==========================================
-    function hideSplashScreen() {
-      const splash = document.getElementById('splash-screen');
-      if (splash && !splash.classList.contains('fade-out')) {
-        splash.classList.add('fade-out');
-      }
-    }
-    // 画面が表示されたら即座に0.6秒後にフェードアウト
-    setTimeout(hideSplashScreen, 600);
-    // 念のための保険（最大1.2秒で必ず消す）
-    setTimeout(hideSplashScreen, 1200);
-
+  
     // ==========================================
     // 1. Supabase 初期設定
     // （※ここにSupabaseのURLとanonキーを入力してください）
